@@ -14,7 +14,9 @@ public class PlayerMoveScript : MonoBehaviour
     [SerializeField] private int maxGravScale;
     [SerializeField] private float holdGravityScale;
 
-    private LayerMask layer;
+    [SerializeField] private float jumpTimeCounter;
+    [SerializeField] private float jumpTimeTolerance;
+
 
     private float horizontalInput;
     public int jumpCharges;
@@ -48,19 +50,26 @@ public class PlayerMoveScript : MonoBehaviour
 
         #region Jump Mechanic
 
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.W))
         {
             jumpButton = true;
         }
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.Space))  // hold Button to jump Higher
-        {
-            holdJumpbutton = true;
+        if (Input.GetKey(KeyCode.W) && jumpCharges >0)  // hold Button to jump Higher
+        {   
             rg.gravityScale = holdGravityScale;
         }
         else
         {
-            holdJumpbutton = false;
             rg.gravityScale = maxGravScale;
+        }
+
+        if(jumpButton)
+        {
+            jumpTimeCounter += 1 * Time.deltaTime;
+        }
+        else
+        {
+            jumpTimeCounter = 0;
         }
 
         if (rg.velocity.y < -0.01)
@@ -113,9 +122,10 @@ public class PlayerMoveScript : MonoBehaviour
              Jump();
              jumpCharges -= 1;
         }
-        else if (jumpButton && !isGrounded && jumpCharges == 0)
+        else if (jumpButton && !isGrounded && jumpCharges == 0 && jumpTimeCounter >= jumpTimeTolerance)
         {
             jumpButton = false;
+            
         }
     }
 
