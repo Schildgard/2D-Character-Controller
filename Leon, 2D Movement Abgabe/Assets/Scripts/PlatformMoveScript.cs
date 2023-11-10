@@ -1,40 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlatformMoveScript : MonoBehaviour
 {
 
-    [SerializeField]
-    private float moveSpeed;
-    [SerializeField]
-    private float changeDirectionTimer;
-    [SerializeField]
-    private float directionValue;
-    [SerializeField]
-    private float changeDirection;
+    [SerializeField] private Transform point01;
+    [SerializeField] private Transform point02;
 
-    private Rigidbody2D rg;
+    private int transformValue = 1;
+    public int movespeed;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        rg = GetComponent<Rigidbody2D>();
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        rg.velocity = Vector2.right * directionValue * moveSpeed;
-        changeDirectionTimer += 1 * Time.deltaTime;
-
-        if (changeDirectionTimer >= changeDirection) 
-        {
-            directionValue *= -1;
-            changeDirectionTimer = 0;
-        }
 
 
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawLine(transform.position, point01.position);
+        Gizmos.DrawLine(transform.position, point02.position);
     }
 }

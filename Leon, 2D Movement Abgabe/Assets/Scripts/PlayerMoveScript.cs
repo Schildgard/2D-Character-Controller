@@ -1,4 +1,4 @@
-
+    
 using System.Globalization;
 using UnityEngine;
 
@@ -10,6 +10,7 @@ public class PlayerMoveScript : MonoBehaviour
     [SerializeField] private Transform groundCheckTransform;
     [SerializeField] private Vector2 groundCheckTransformSize;
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private LayerMask platformLayer;
 
     [SerializeField] private int maxGravScale;
     [SerializeField] private float holdGravityScale;
@@ -92,6 +93,7 @@ public class PlayerMoveScript : MonoBehaviour
 
         #region GroundCollisionCheck
         Collider2D col;
+        Collider2D col2;
         col = Physics2D.OverlapBox(groundCheckTransform.position, groundCheckTransformSize, 0f, groundLayer);
 
         if (col != null)
@@ -105,6 +107,16 @@ public class PlayerMoveScript : MonoBehaviour
             isGrounded = false;
         }
 
+        col2 = Physics2D.OverlapBox(groundCheckTransform.position, groundCheckTransformSize, 0f, platformLayer);
+
+        if (col2 != null)
+        {
+
+        }
+        else
+        {
+
+        }
 
         #endregion
     }
