@@ -111,7 +111,7 @@ public class PlayerMoveScript : MonoBehaviour
 
         if (col2 != null)
         {
-
+            gameObject.transform.parent = col2.transform;
         }
         else
         {
