@@ -115,7 +115,7 @@ public class PlayerMoveScript : MonoBehaviour
         }
         else
         {
-
+            gameObject.transform.parent = null;
         }
 
         #endregion
