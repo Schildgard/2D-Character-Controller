@@ -36,7 +36,7 @@ public class PlayerMoveScript : MonoBehaviour
     {
        rg = GetComponent<Rigidbody2D>();
        playerSprite = GetComponent<SpriteRenderer>();
-       playerVelocity = rg.velocity;
+       //playerVelocity = rg.velocity;
       
     }
 
