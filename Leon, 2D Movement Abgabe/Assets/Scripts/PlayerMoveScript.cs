@@ -1,40 +1,37 @@
-    
-using System.Globalization;
 using UnityEngine;
 
 public class PlayerMoveScript : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed;
-    [SerializeField] private float jumpPower;
+    private Rigidbody2D rg;
+    private SpriteRenderer playerSprite;
+    private float horizontalInput;
+    private Vector2 playerVelocity;
 
+    [Header("Vertical Movement")]
+    [SerializeField] private float moveSpeed;
+
+    [Header("Jump Handling")]
+    [SerializeField] private float jumpPower;
+    [SerializeField] private float jumpInputPuffer;
+    [SerializeField] private float jumpTimeTolerance;
+    private int jumpCharges = 1;
+    private int maxJumpCharges = 1;
+    private bool jumpButtonPressed;
+    private bool jumpButtonHold;
+
+
+    [Header("GroundCheck")]
     [SerializeField] private Transform groundCheckTransform;
     [SerializeField] private Vector2 groundCheckTransformSize;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask platformLayer;
+    private bool isGrounded;
 
+    [Header("Gravity Scaling")]
     [SerializeField] private int maxGravScale;
     [SerializeField] private float holdGravityScale;
 
-    [SerializeField] private float jumpTimeCounter;
-    [SerializeField] private float jumpTimeTolerance;
 
-
-    private float horizontalInput;
-    public int jumpCharges;
-    public int maxJumpCharges = 1;
-    
-    public bool jumpButton;
-    public bool isGrounded;
-    public bool holdJumpbutton;
-
-    private Rigidbody2D rg;
-    private SpriteRenderer playerSprite;
-    public Vector2 playerVelocity;
-    
-   
-
-
-    // Start is called before the first frame update
     void Start()
     {
        rg = GetComponent<Rigidbody2D>();
@@ -43,19 +40,18 @@ public class PlayerMoveScript : MonoBehaviour
       
     }
 
-    // Update is called once per frame
     void Update()
     {
         horizontalInput = Input.GetAxis("Horizontal");
-        PlayerMove();
+        MovePlayer();
 
-        #region Jump Mechanic
+        #region Jump
 
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            jumpButton = true;
+            jumpButtonPressed = true;
         }
-        if (Input.GetKey(KeyCode.W) && jumpCharges >0)  // hold Button to jump Higher
+        if (Input.GetKey(KeyCode.Space) && jumpCharges > 0)  // hold Button to jump Higher
         {   
             rg.gravityScale = holdGravityScale;
         }
@@ -64,13 +60,13 @@ public class PlayerMoveScript : MonoBehaviour
             rg.gravityScale = maxGravScale;
         }
 
-        if(jumpButton)
+        if(jumpButtonPressed)
         {
-            jumpTimeCounter += 1 * Time.deltaTime;
+            jumpInputPuffer += 1 * Time.deltaTime; 
         }
         else
         {
-            jumpTimeCounter = 0;
+            jumpInputPuffer = 0;
         }
 
         if (rg.velocity.y < -0.01)
@@ -79,7 +75,7 @@ public class PlayerMoveScript : MonoBehaviour
         }
         #endregion
 
-        #region PlayerFlip
+        #region PlipPlayer Direction
 
         if (horizontalInput > 0.01)
         {
@@ -92,23 +88,23 @@ public class PlayerMoveScript : MonoBehaviour
         #endregion
 
         #region GroundCollisionCheck
+        // Check if player stays on ground (col1) or on a moving platform (col2)
         Collider2D col;
         Collider2D col2;
         col = Physics2D.OverlapBox(groundCheckTransform.position, groundCheckTransformSize, 0f, groundLayer);
 
+        // if player stands on ground
         if (col != null)
         {
             isGrounded = true;
             jumpCharges = maxJumpCharges;
-            
         }
         else
         {
             isGrounded = false;
         }
-
+        // if player stands on platform make the player a child of platform so he moves with the platform
         col2 = Physics2D.OverlapBox(groundCheckTransform.position, groundCheckTransformSize, 0f, platformLayer);
-
         if (col2 != null)
         {
             gameObject.transform.parent = col2.transform;
@@ -117,32 +113,28 @@ public class PlayerMoveScript : MonoBehaviour
         {
             gameObject.transform.parent = null;
         }
-
         #endregion
     }
 
     void FixedUpdate()
     {
-        if (jumpButton && isGrounded)
+        if (jumpButtonPressed && isGrounded)
         {
             Jump();
-
         }
-        else if (jumpButton && !isGrounded && jumpCharges > 0)
+        else if (jumpButtonPressed && !isGrounded && jumpCharges > 0)
         {
-             
              Jump();
              jumpCharges -= 1;
         }
-        else if (jumpButton && !isGrounded && jumpCharges == 0 && jumpTimeCounter >= jumpTimeTolerance)
+        else if (jumpButtonPressed && !isGrounded && jumpCharges == 0 && jumpInputPuffer >= jumpTimeTolerance)
         {
-            jumpButton = false;
-            
+            jumpButtonPressed = false;
         }
     }
 
 
-    public void PlayerMove()
+    public void MovePlayer()
     {
         rg.velocity = new Vector2(horizontalInput * moveSpeed, rg.velocity.y);
     }
@@ -151,11 +143,25 @@ public class PlayerMoveScript : MonoBehaviour
     {
         rg.velocity = playerVelocity;
         rg.AddForce( Vector2.up*jumpPower, ForceMode2D.Impulse);
-        jumpButton = false;
+        jumpButtonPressed = false;
     }
 
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Ground")
+        {
+            isGrounded = true;
+            jumpCharges = maxJumpCharges;
+            jumpButtonPressed = false;
+        }
+    }
 
-   void OnDrawGizmos()
+    public void OnCollisionExit2D(Collision2D collision)
+    {
+        isGrounded = false;
+    }
+
+    void OnDrawGizmos()
    {
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(groundCheckTransform.position,groundCheckTransformSize);
