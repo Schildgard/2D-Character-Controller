@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class ExitManager : MonoBehaviour
 {
     // Manages the Application Exit Option
     [SerializeField] private GameObject pauseScreenPanel;

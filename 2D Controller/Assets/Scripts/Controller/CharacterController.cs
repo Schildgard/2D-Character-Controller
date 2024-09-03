@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerMoveScript : MonoBehaviour
+public class CharacterController : MonoBehaviour
 {
     private Rigidbody2D rg;
     private SpriteRenderer playerSprite;
@@ -9,6 +9,9 @@ public class PlayerMoveScript : MonoBehaviour
 
     [Header("Vertical Movement")]
     [SerializeField] private float moveSpeed;
+    [SerializeField] private float runSpeed;
+    private float normalMoveSpeed;
+    private bool isRunning;
 
     [Header("Jump Handling")]
     [SerializeField] private float jumpPower;
@@ -32,12 +35,18 @@ public class PlayerMoveScript : MonoBehaviour
     [SerializeField] private float holdGravityScale;
 
 
+    #region Properties
+    public float HorizontalInput => horizontalInput;
+    public bool IsRunning => isRunning;
+    #endregion
+
+
     void Start()
     {
-       rg = GetComponent<Rigidbody2D>();
-       playerSprite = GetComponent<SpriteRenderer>();
-       //playerVelocity = rg.velocity;
-      
+        rg = GetComponent<Rigidbody2D>();
+        playerSprite = GetComponent<SpriteRenderer>();
+        normalMoveSpeed = moveSpeed;
+
     }
 
     void Update()
@@ -45,6 +54,16 @@ public class PlayerMoveScript : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         MovePlayer();
 
+        #region Run
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            Run();
+        }
+        else
+        {
+            isRunning = false;
+        }
+        #endregion
         #region Jump
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -52,7 +71,7 @@ public class PlayerMoveScript : MonoBehaviour
             jumpButtonPressed = true;
         }
         if (Input.GetKey(KeyCode.Space) && jumpCharges > 0)  // hold Button to jump Higher
-        {   
+        {
             rg.gravityScale = holdGravityScale;
         }
         else
@@ -60,9 +79,9 @@ public class PlayerMoveScript : MonoBehaviour
             rg.gravityScale = maxGravScale;
         }
 
-        if(jumpButtonPressed)
+        if (jumpButtonPressed)
         {
-            jumpInputPuffer += 1 * Time.deltaTime; 
+            jumpInputPuffer += 1 * Time.deltaTime;
         }
         else
         {
@@ -74,7 +93,6 @@ public class PlayerMoveScript : MonoBehaviour
             rg.gravityScale = maxGravScale;  // restore Gravity scale when falling down
         }
         #endregion
-
         #region PlipPlayer Direction
 
         if (horizontalInput > 0.01)
@@ -86,7 +104,6 @@ public class PlayerMoveScript : MonoBehaviour
             playerSprite.flipX = true;
         }
         #endregion
-
         #region GroundCollisionCheck
         // Check if player stays on ground (col1) or on a moving platform (col2)
         Collider2D col;
@@ -124,8 +141,8 @@ public class PlayerMoveScript : MonoBehaviour
         }
         else if (jumpButtonPressed && !isGrounded && jumpCharges > 0)
         {
-             Jump();
-             jumpCharges -= 1;
+            Jump();
+            jumpCharges -= 1;
         }
         else if (jumpButtonPressed && !isGrounded && jumpCharges == 0 && jumpInputPuffer >= jumpTimeTolerance)
         {
@@ -136,13 +153,28 @@ public class PlayerMoveScript : MonoBehaviour
 
     public void MovePlayer()
     {
+        if (isRunning)
+        {
+            moveSpeed = runSpeed;
+        }
+        else
+        {
+            if (moveSpeed != normalMoveSpeed)
+            {
+                moveSpeed = normalMoveSpeed;
+            }
+        }
         rg.velocity = new Vector2(horizontalInput * moveSpeed, rg.velocity.y);
+    }
+    public void Run()
+    {
+        isRunning = true;
     }
 
     public void Jump()
     {
         rg.velocity = playerVelocity;
-        rg.AddForce( Vector2.up*jumpPower, ForceMode2D.Impulse);
+        rg.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
         jumpButtonPressed = false;
     }
 
@@ -162,11 +194,11 @@ public class PlayerMoveScript : MonoBehaviour
     }
 
     void OnDrawGizmos()
-   {
+    {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(groundCheckTransform.position,groundCheckTransformSize);
+        Gizmos.DrawWireCube(groundCheckTransform.position, groundCheckTransformSize);
 
-   }
+    }
 
 
 }
