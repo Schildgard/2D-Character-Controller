@@ -1488,7 +1488,7 @@ Transform:
   m_GameObject: {fileID: 797023957}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -10.45, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3274,9 +3274,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Press Space: Jump
-
-    Press ESC: Exit Demo'
+  m_text: "Press LeftShift: \tRun\nPress Space: \tJump\nPress W/S: \t  \tMove Camera\nPress
+    ESC: \t  \tExit Demo"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4402,7 +4401,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8874776206367417192, guid: 8ca7d995cb9b21e48929e75ff1d6ebc3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -10.011676
+      value: -10.85
       objectReference: {fileID: 0}
     - target: {fileID: 8874776206367417192, guid: 8ca7d995cb9b21e48929e75ff1d6ebc3, type: 3}
       propertyPath: m_LocalPosition.z
