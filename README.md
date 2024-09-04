@@ -17,7 +17,7 @@ This 2D Jump & Run Controller is designed to provide fundamental mechanics for 2
 
 ## Assets
 
-The scene utilizes custom assets created as part of my initial foray into designing 2D game assets. These were crafted as an exercise to develop my skills in 2D asset creation.
+The scene utilizes custom assets created by me. These were crafted as an exercise to develop basic skills in 2D asset creation. The music is also done by myself.
 ![{3A38D9E0-46D9-490D-9037-9A1C5C1D7175}](https://github.com/user-attachments/assets/741b6267-2d21-4864-99b0-0a0142227f7e)
 
 ---
