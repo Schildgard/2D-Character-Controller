@@ -1,6 +1,7 @@
-# 2D Jump & Run Controller
+
 ![{D6C38353-9214-4757-BA07-5EA923C2AD93}](https://github.com/user-attachments/assets/b0962349-75de-43d5-a9d6-1701f5e595e4)
 
+# About
 This 2D Jump & Run Controller is designed to provide fundamental mechanics for 2D platforming games. It features smooth movement, jumping capabilities, and camera control tailored for a dynamic gameplay experience.
 
 ### Features
