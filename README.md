@@ -13,7 +13,7 @@ This 2D Jump & Run Controller is designed to provide fundamental mechanics for 2
 ### Included Content
 
 - **Level:** A compact course with moving platforms to test the controller's features.
-- **GaruMak:**Garu`mak the cat will tell you about the input controls.
+- **GaruMak:** Garu`mak the cat will tell you about the input controls.
 
 ## Assets
 
