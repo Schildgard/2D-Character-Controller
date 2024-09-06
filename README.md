@@ -23,5 +23,3 @@ The scene utilizes custom assets created by me. These were crafted as an exercis
 
 ---
 
-Feel free to modify this template as needed to better fit your project’s specifics!
-
